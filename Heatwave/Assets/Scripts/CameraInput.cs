@@ -7,10 +7,10 @@ public class CameraInput : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private Transform target;
 
-    private const float defaultCameraDistance = 7;
-    private const float defaultCameraRotate = 60;
-    private const float defaultMinZoom = -2;
-    private const float defaultMaxZoom = -12;
+    private const float defaultCameraDistance = 20;
+    private const float defaultCameraRotate = 65;
+    private const float defaultMinZoom = -10;
+    private const float defaultMaxZoom = -40;
     
     private Vector3 defaultPosition;
     private Vector3 previousPosition;
@@ -26,7 +26,6 @@ public class CameraInput : MonoBehaviour
         cam.transform.position = target.position;
         cam.transform.Rotate(new Vector3(1, 0, 0), defaultCameraRotate);
         cam.transform.Translate(new Vector3(0, 0, -defaultCameraDistance));
-        previousPosition = cam.ScreenToViewportPoint(Input.mousePosition);
     }
     
     void Update() {
@@ -77,8 +76,8 @@ public class CameraInput : MonoBehaviour
             }
             // Zoom out
             else if (-defaultCameraDistance + zoom > defaultMaxZoom) {
-                zoom = zoom - 0.25f;
-                cam.transform.Translate(new Vector3(0, 0, -0.25f));
+                zoom = zoom - 1;
+                cam.transform.Translate(new Vector3(0, 0, -1));
             }
 
         }
@@ -96,8 +95,8 @@ public class CameraInput : MonoBehaviour
             }
             // Zoom in
             else if (-defaultCameraDistance + zoom < defaultMinZoom) {
-                zoom = zoom + 0.25f;
-                cam.transform.Translate(new Vector3(0, 0, 0.25f));
+                zoom = zoom + 1;
+                cam.transform.Translate(new Vector3(0, 0, 1));
             }
 
         }
