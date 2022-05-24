@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraInput : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private Transform target;
@@ -23,6 +23,7 @@ public class CameraInput : MonoBehaviour
     private float zoom = 0;
     
     void Start() {
+        // target.transform.position = new Vector3(50, 0, 50);
         cam.transform.position = target.position;
         cam.transform.Rotate(new Vector3(1, 0, 0), defaultCameraRotate);
         cam.transform.Translate(new Vector3(0, 0, -defaultCameraDistance));
