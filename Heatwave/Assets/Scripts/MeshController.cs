@@ -10,23 +10,51 @@ public class MeshController : MonoBehaviour
 
     [Range(1.5f, 5f)]
     public float deformationStrength = 2f;
+    
+    public GameObject terrainTexture;
+    public GameObject terrainPath;
 
-    private Mesh mesh;
-    private Vector3[] verticies, modifiedVerts;
+    private Mesh meshTexture, meshPath;
+    private Vector3[] verticiesTexture, modifiedVertsTexture, verticiesPath, modifiedVertsPath;
     
     // Start is called before the first frame update
     void Start()
     {
-        mesh = GetComponentInChildren<MeshFilter>().mesh;
-        verticies = mesh.vertices;
-        modifiedVerts = mesh.vertices;
+        meshTexture = terrainTexture.GetComponent<MeshFilter>().mesh;
+        verticiesTexture = meshTexture.vertices;
+        modifiedVertsTexture = meshTexture.vertices;
+
+        meshPath = terrainPath.GetComponent<MeshFilter>().mesh;
+        verticiesPath = meshPath.vertices;
+        modifiedVertsPath = meshPath.vertices;
     }
 
     void RecalculateMesh() {
-        mesh.vertices = modifiedVerts;
-        GetComponentInChildren<MeshFilter>().mesh = mesh;
-        GetComponentInChildren<MeshCollider>().sharedMesh = mesh;
-        mesh.RecalculateNormals();
+        meshTexture.vertices = modifiedVertsTexture;
+
+        MeshFilter mesh_filter_T = terrainTexture.GetComponent<MeshFilter>();
+		MeshRenderer mesh_renderer_T = terrainTexture.GetComponent<MeshRenderer>();
+		MeshCollider mesh_collider_T = terrainTexture.GetComponent<MeshCollider>();
+
+        mesh_filter_T.mesh = meshTexture;
+        mesh_collider_T.sharedMesh = meshTexture;
+        
+        // terrainTexture.GetComponent<MeshFilter>().mesh = meshTexture;
+        // terrainTexture.GetComponent<MeshFilter>().sharedMesh = meshTexture;
+        meshTexture.RecalculateNormals();
+
+        meshPath.vertices = modifiedVertsPath;
+
+        MeshFilter mesh_filter_P = terrainPath.GetComponent<MeshFilter>();
+		MeshRenderer mesh_renderer_P = terrainPath.GetComponent<MeshRenderer>();
+		MeshCollider mesh_collider_P = terrainPath.GetComponent<MeshCollider>();
+
+        mesh_filter_P.mesh = meshPath;
+        mesh_collider_P.sharedMesh = meshPath;
+        
+        // terrainPath.GetComponent<MeshFilter>().mesh = meshPath;
+        // terrainPath.GetComponent<MeshFilter>().sharedMesh = meshPath;
+        meshPath.RecalculateNormals();
     }
 
     // Update is called once per frame
@@ -38,17 +66,31 @@ public class MeshController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
-                for (int v = 0; v < modifiedVerts.Length; v++) {
-                    Vector3 distance = modifiedVerts[v] - hit.point;
+
+                for (int v = 0; v < modifiedVertsTexture.Length; v++) {
+                    Vector3 distance = modifiedVertsTexture[v] - hit.point;
 
                     float smoothingFactor = 2f;
                     float force = deformationStrength / (1f + hit.point.sqrMagnitude);
                     
                     if(distance.sqrMagnitude < radius) {
-                        modifiedVerts[v] = modifiedVerts[v] + (Vector3.up * force) / smoothingFactor;
+                        modifiedVertsTexture[v] = modifiedVertsTexture[v] + (Vector3.up * force) / smoothingFactor;
                         RecalculateMesh();
                     }
                 }
+
+                for (int v = 0; v < modifiedVertsPath.Length; v++) {
+                    Vector3 distance = modifiedVertsPath[v] - hit.point;
+
+                    float smoothingFactor = 2f;
+                    float force = deformationStrength / (1f + hit.point.sqrMagnitude);
+                    
+                    if(distance.sqrMagnitude < radius) {
+                        modifiedVertsPath[v] = modifiedVertsPath[v] + (Vector3.up * force) / smoothingFactor;
+                        RecalculateMesh();
+                    }
+                }
+
             }
         }
 
@@ -57,18 +99,32 @@ public class MeshController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
-                for (int v = 0; v < modifiedVerts.Length; v++) {
-                    Vector3 distance = modifiedVerts[v] - hit.point;
+
+                for (int v = 0; v < modifiedVertsTexture.Length; v++) {
+                    Vector3 distance = modifiedVertsTexture[v] - hit.point;
 
                     float smoothingFactor = 2f;
                     float force = deformationStrength / (1f + hit.point.sqrMagnitude);
                     
                     if(distance.sqrMagnitude < radius) {
-                        modifiedVerts[v] = modifiedVerts[v] + (Vector3.down * force) / smoothingFactor;
+                        modifiedVertsTexture[v] = modifiedVertsTexture[v] + (Vector3.down * force) / smoothingFactor;
                         RecalculateMesh();
                     }
                     
                 }
+
+                for (int v = 0; v < modifiedVertsPath.Length; v++) {
+                    Vector3 distance = modifiedVertsPath[v] - hit.point;
+
+                    float smoothingFactor = 2f;
+                    float force = deformationStrength / (1f + hit.point.sqrMagnitude);
+                    
+                    if(distance.sqrMagnitude < radius) {
+                        modifiedVertsPath[v] = modifiedVertsPath[v] + (Vector3.down * force) / smoothingFactor;
+                        RecalculateMesh();
+                    }
+                }
+
             }
         }
 
