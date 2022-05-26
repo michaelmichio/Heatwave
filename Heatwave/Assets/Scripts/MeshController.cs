@@ -24,6 +24,7 @@ public class MeshController : MonoBehaviour
 
     void RecalculateMesh() {
         mesh.vertices = modifiedVerts;
+        GetComponentInChildren<MeshFilter>().mesh = mesh;
         GetComponentInChildren<MeshCollider>().sharedMesh = mesh;
         mesh.RecalculateNormals();
     }
@@ -31,27 +32,46 @@ public class MeshController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
-            for (int v = 0; v < modifiedVerts.Length; v++) {
-                Vector3 distance = modifiedVerts[v] - hit.point;
+        if(Input.GetKey(KeyCode.W)) {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-                float smoothingFactor = 2f;
-                float force = deformationStrength / (1f + hit.point.sqrMagnitude);
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
+                for (int v = 0; v < modifiedVerts.Length; v++) {
+                    Vector3 distance = modifiedVerts[v] - hit.point;
 
-                if(distance.sqrMagnitude < radius) {
-                    if(Input.GetKey(KeyCode.W)) {
+                    float smoothingFactor = 2f;
+                    float force = deformationStrength / (1f + hit.point.sqrMagnitude);
+                    
+                    if(distance.sqrMagnitude < radius) {
                         modifiedVerts[v] = modifiedVerts[v] + (Vector3.up * force) / smoothingFactor;
-                    } 
-                    else if(Input.GetKey(KeyCode.S)) {
-                        modifiedVerts[v] = modifiedVerts[v] + (Vector3.down * force) / smoothingFactor;
+                        RecalculateMesh();
                     }
                 }
             }
         }
 
-        RecalculateMesh();
+        if(Input.GetKey(KeyCode.S)) {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
+                for (int v = 0; v < modifiedVerts.Length; v++) {
+                    Vector3 distance = modifiedVerts[v] - hit.point;
+
+                    float smoothingFactor = 2f;
+                    float force = deformationStrength / (1f + hit.point.sqrMagnitude);
+                    
+                    if(distance.sqrMagnitude < radius) {
+                        modifiedVerts[v] = modifiedVerts[v] + (Vector3.down * force) / smoothingFactor;
+                        RecalculateMesh();
+                    }
+                    
+                }
+            }
+        }
+
     }
+
 }
