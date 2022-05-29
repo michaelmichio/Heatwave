@@ -128,6 +128,29 @@ public class MeshController : MonoBehaviour
             }
         }
 
+        if(Input.GetKeyDown(KeyCode.A)) {
+            RaycastHit hit;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if(Physics.Raycast(ray, out hit, Mathf.Infinity)) {
+                int hitTri = hit.triangleIndex;
+                Debug.Log(hitTri);
+                Debug.Log(modifiedVertsPath.Length);
+                modifiedVertsPath[(hitTri-(8*1)) + 0].y += 1;
+                modifiedVertsPath[(hitTri-(8*1)) + 1].y += 1;
+                modifiedVertsPath[(hitTri-(8*0)) + 0].y += 1;
+                modifiedVertsPath[(hitTri-(8*0)) + 1].y += 1;
+                
+            }
+
+            // Vector3 p0 = modifiedVertsPath[triangles[hitTri * 3 + 0]];
+            // Vector3 p1 = modifiedVertsPath[triangles[hitTri * 3 + 1]];
+            // Vector3 p2 = modifiedVertsPath[triangles[hitTri * 3 + 2]];
+
+            // modifiedVertsTexture[v] =
+            RecalculateMesh();
+        }
+
     }
 
 }

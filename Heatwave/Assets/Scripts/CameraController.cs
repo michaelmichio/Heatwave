@@ -7,10 +7,10 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Camera cam;
     [SerializeField] private Transform target;
 
-    private const float defaultCameraDistance = 20;
-    private const float defaultCameraRotate = 65;
+    private const float defaultCameraDistance = 10;
+    private const float defaultCameraRotate = 70;
     private const float defaultMinZoom = -10;
-    private const float defaultMaxZoom = -40;
+    private const float defaultMaxZoom = -20;
     
     private Vector3 defaultPosition;
     private Vector3 previousPosition;
@@ -18,8 +18,8 @@ public class CameraController : MonoBehaviour
     private const float DOUBLE_CLICK_TIME = .4f;
     private float lastClickTime;
 
-    private const float MIN_UP_ROTATION = 0;
-    private const float MAX_DOWN_ROTATION = 0;
+    private const float MAX_UP_ROTATION = 80;
+    private const float MAX_DOWN_ROTATION = 65;
     private float zoom = 0;
     
     void Start() {
@@ -65,11 +65,11 @@ public class CameraController : MonoBehaviour
         }
 
         // Scroll Down
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0f ) {
+        else if (Input.GetAxis("Mouse ScrollWheel") > 0f ) {
             
             // Rotate Down
             if (Input.GetKey(KeyCode.LeftShift)) {
-                if (cam.transform.localEulerAngles.x - 5 > 30 - 0.1f) {
+                if (cam.transform.localEulerAngles.x - 5 > MAX_DOWN_ROTATION - 0.1f) {
                     cam.transform.position = target.position;
                     cam.transform.Rotate(new Vector3(1, 0, 0), -5);
                     cam.transform.Translate(new Vector3(0, 0, -defaultCameraDistance + zoom));
@@ -84,11 +84,11 @@ public class CameraController : MonoBehaviour
         }
 
         // Scroll Up
-        else if (Input.GetAxis("Mouse ScrollWheel") > 0f ) {
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f ) {
             
             // Rotate Up
             if (Input.GetKey(KeyCode.LeftShift)) {
-                if (cam.transform.localEulerAngles.x + 5 < 75 + 0.1f) {
+                if (cam.transform.localEulerAngles.x + 5 < MAX_UP_ROTATION + 0.1f) {
                     cam.transform.position = target.position;
                     cam.transform.Rotate(new Vector3(1, 0, 0), 5);
                     cam.transform.Translate(new Vector3(0, 0, -defaultCameraDistance + zoom));
